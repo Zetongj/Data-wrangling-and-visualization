@@ -1,0 +1,66 @@
+---
+title: "Facebook Ad Targeting"
+author: "Zetong Jin"
+output: html_document
+---
+
+
+#1.Running a regression to get familar with the data
+```{r}
+data = read.csv("/Users/thomas/Desktop/predictive/Facebook Data.csv")
+summary(lm(clickPerDollar~factor(adType)+factor(category)+factor(placement)+factor(keywords)+factor(body)+ageMean, data = data))
+```
+
+
+#2. Regression did not work for a single value
+```{r}
+#summary(lm(clickPerDollar~factor(adType)+factor(category)+factor(placement)+factor(keywords)+factor(body)+ageMean+date, data = data)) 
+#Not working
+```
+
+# This regression did not work because there is only a single value for date.
+
+#3.Show the Interpretation of the factor(category)General coefficient
+```{r}
+#Coefficient: -45.741606
+```
+
+#The factor(category)General coefficient implies that ads in the general category receive -45.7 fewer clicks per dollar than the baseline, which is cosmetics.
+
+#4.Show the Interpretation of the ageMean coefficient
+```{r}
+#Coefficient: 2.6
+```
+
+#The ageMean coefficient implies that a one year increase in ageMean results in an increase of 2.6 clicks per dollar.
+
+#5. Analysis the interaction between category and ageMean as independent variables 
+```{r}
+summary(lm(clickPerDollar~factor(adType)+factor(category)+factor(placement)+factor(keywords)+factor(body)+ageMean+factor(category):ageMean, data = data))
+#Ecom and ageMean Interaction coefficient: -0.36125 
+#ageMean coefficient: 2.41
+```
+
+#The factor(category)eCom:ageMean coefficient means that, in the eCom category, an increase of 1 in ageMean results in 0.358 fewer clicks per dollar than in the cosmetics category.
+
+#6. 
+```{r}
+# Interaction coefficient: -28.29490
+# no interaction coefficient: -42.643506 
+```
+
+# The coefficient of factor(category)eCom increased from -42.60 to -28.38. In the initial regression, factor(category)eCom showed the effect of eCom for all consumers, while in this regression, this categorical variable only applies to consumers with an age of 0.
+
+#7. 
+
+```{r}
+# old
+Facebook <- read.csv('/Users/thomas/Desktop/predictive/Facebook Data.csv')
+summary(lm(clickPerDollar~factor(adType)+factor(category)+factor(placement)+ factor(keywords)+factor(body)+factor(ageMean)+factor(category)*factor(ageMean),data = Facebook))
+
+# new
+New <- read.csv('/Users/thomas/Downloads/HW2DataNew.csv')
+summary(lm(clickPerDollar~factor(adType)+factor(category)+factor(placement)+ factor(keywords)+factor(body)+factor(ageMean)+factor(category)*factor(ageMean),data = New))
+```
+
+# By comparing the old/new data, we can see that new ad is effective for the youngest age category and the eCom category
